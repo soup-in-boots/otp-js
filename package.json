@@ -1,10 +1,10 @@
 {
-  "name": "erljs",
+  "name": "open-telecom",
   "version": "0.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --recursive test"
+    "test": "mocha test"
   },
   "author": "Zachary Hueras",
   "license": "MIT",
