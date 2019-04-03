@@ -1,4 +1,4 @@
-var Process = require("../lib/process.js");
+const {pid, MessageBox} = require('../lib/message-box.js')
 var expect = require('chai').expect;
 
 function wait(ms) {
@@ -11,20 +11,16 @@ function random() {
     return Math.floor(Math.random() * 999999999999);
 }
 
+
 describe("Process", function() {
     var proc, state;
 
     beforeEach(function() {
-        proc = new Process(null, __dirname + '/mock/basic_init_module');
+        proc = new MessageBox(null, pid({node: 0, proc: 1}));
     });
 
-    it("runs a module", function() {
-        expect(proc.__state).to.be.equal(Process.WAITING);
-        expect(proc.__context.initialized).to.be.true;
-    });
-
-    it("has a pid", function() {
-        expect(proc.__pid).to.not.be.undefined;
+    it('has a pid', function() {
+        expect(proc.self()).to.not.be.undefined;
     });
 
     it("can receive messages", function() {

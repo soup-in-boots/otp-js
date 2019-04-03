@@ -1,6 +1,6 @@
 {
   "name": "open-telecom",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -14,7 +14,12 @@
     "jsdoc": "^3.4.0"
   },
   "dependencies": {
+    "chai-as-promised": "^7.1.1",
     "commander": "^2.9.0",
-    "ejson": "^2.1.2"
+    "debug": "^4.1.1",
+    "ejson": "^2.1.2",
+    "immutable": "^4.0.0-rc.12",
+    "shortid": "^2.2.14",
+    "supports-color": "^6.1.0"
   }
 }

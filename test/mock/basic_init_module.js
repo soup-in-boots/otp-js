@@ -1,6 +1,5 @@
 initialized = true;
 
-receive().then(handleMessage);
 var running = true;
 var context = global;
 

@@ -21,26 +21,26 @@ describe("Scheduler", function() {
 });
 
 function describeFeatures() {
-    var scheduler, pid, proc;
+    var node, pid;
 
     beforeEach(function() {
-        scheduler = new Scheduler();
+        node = new OTPNode();
         pid = null;
     });
 
-    it("can spawn processes", function() {
+    it('can spawn processes', function() {
         expect(function() {
-            pid = scheduler.spawn(TEST_MODULE, true);
+            pid = node.spawn(TEST_MODULE);
         }).to.not.throw(Error);
     });
 
-    it("returns the pid of a spawned process", function() {
-        pid = scheduler.spawn(TEST_MODULE, true);
+    it('returns the pid of a spawned process', function() {
+        pid = scheduler.spawn(TEST_MODULE, 'main', [], true);
         expect(pid).to.be.an.instanceOf(Process.Identifier);
     });
 
-    it("can find a process from its pid", function() {
-        pid = scheduler.spawn(TEST_MODULE, true);
+    it('can find a process from its pid', function() {
+        pid = scheduler.spawn(TEST_MODULE, 'main', [], true);
         expect(function() {
             scheduler.__find(pid);
         }).to.not.throw(Error);
@@ -55,18 +55,19 @@ function describeRouting() {
 
     beforeEach(function() {
         scheduler = new Scheduler();
-        pidA = scheduler.spawn(TEST_MODULE, true);
-        pidB = scheduler.spawn(TEST_MODULE, true);
+        pidA      = scheduler.spawn(TEST_MODULE, 'main', [], true);
+        pidB      = scheduler.spawn(TEST_MODULE, 'main', [], true);
     });
 
-    it("can route messages to a process with its pid", function() {
+    it('can route messages to a process with its pid', async function() {
         var state = random(),
             proc = scheduler.__find(pidA);
 
         scheduler.send(pidA, {'op': 'set-value', 'name': 'state', 'value': state});
-        return wait(10).then(function() {
-            expect(proc.__context.state).to.be.equal(state);
-        });
+
+        await wait(10);
+
+        expect(proc.__context.state).to.be.equal(state);
     });
 
     it("can route messages on behalf of processes", function() {
