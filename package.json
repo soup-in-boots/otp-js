@@ -4,11 +4,17 @@
   "description": "",
   "main": "index.js",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/fauxsoup/otp-js.git"
+    "type": "git",
+    "url": "https://github.com/fauxsoup/otp-js.git"
   },
   "scripts": {
-    "test": "mocha --recursive test"
+    "test": "nyc mocha --recursive"
+  },
+  "nyc": {
+      "include": [
+          "lib/**/*.js",
+          "test/**/*.js"
+      ]
   },
   "author": "Zachary Hueras",
   "license": "MIT",
@@ -23,6 +29,7 @@
     "debug": "^4.1.1",
     "ejson": "^2.1.2",
     "immutable": "^4.0.0-rc.12",
+    "nyc": "^13.3.0",
     "shortid": "^2.2.14",
     "supports-color": "^6.1.0"
   }

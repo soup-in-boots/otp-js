@@ -35,8 +35,13 @@ function describeOTPNode() {
 
     it('can create refs', function() {
         expect(node.ref).to.be.a.function;
-        const ref = node.ref();
-        expect(ref).to.be.an.instanceof(Ref);
+        expect(node.make_ref).to.be.a.function;
+
+        const refA = node.ref();
+        expect(refA).to.be.an.instanceof(Ref);
+
+        const refB = node.make_ref();
+        expect(refB).to.be.an.instanceof(Ref);
     });
 
     it('can spawn message boxes', function() {
@@ -55,5 +60,22 @@ function describeOTPNode() {
         expect(node.deliver).to.be.a.function;
         expect(node.deliver({to: proc, msg: 1})).to.not.throw;
     });
+
+    it('fails silently when a message is undeliverable', async function() {
+        proc = node.spawn(async (mb) => {
+                              // noop
+                          });
+
+        await wait(100);
+
+        expect(node.deliver).to.be.a.function;
+        expect(node.deliver({to: proc, msg: 1})).to.not.throw;
+    });
+
+    it('accepts remote pids', async function() {
+        proc = PID.of(1, 0);
+
+        expect(node.deliver({to: proc, msg: 1})).to.not.throw;
+    })
 }
 

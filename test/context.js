@@ -1,10 +1,15 @@
 const {Context}         = require('../lib/context.js');
+const {PID}             = require('../lib/node');
 const chai              = require('chai');
 const chaiAsPromised    = require('chai-as-promised');
 
 chai.use(chaiAsPromised);
 
 const expect = chai.expect;
+
+function wait(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 describe('Context', function() {
     describe('Features', describeFeatures);
@@ -17,7 +22,7 @@ function describeFeatures() {
     beforeEach(function() {
         const node = 0;
         const proc = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-        pid        = {node, proc};
+        pid        = PID.of(0, 0);
         ctx        = new Context(null, pid);
     });
 
@@ -32,17 +37,28 @@ function describeFeatures() {
     });
 
     it('can receive messages', async function() {
-        ctx.deliver(1);
         expect(ctx.receive).to.be.a.function;
 
+        ctx.deliver(1);
         const received = await ctx.receive();
 
         expect(received).to.equal(1);
     });
 
     it('can time out receives', async function() {
-        expect(ctx.receive).to.be.a.function;
-        expect(ctx.receive(() => true, 1000)).to.be.rejected;
+        expect(ctx.receive(() => true, 100)).to.eventually.be.rejected;
+    });
+
+    it('can wait indefinitely', async function() {
+        expect(ctx.receive(() => true, false)).to.eventually.be.resolved;
+        await wait(1000);
+        ctx.deliver(1);
+    });
+
+    it('waits indefinitely by default', async function() {
+        expect(ctx.receive(() => true)).to.eventually.be.resolved;
+        await wait(1000);
+        ctx.deliver(1);
     });
 
     it('has a send function', function() {
