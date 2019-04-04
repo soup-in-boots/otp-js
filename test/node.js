@@ -1,5 +1,5 @@
 const debug        = require('debug');
-const {createNode} = require('../lib/node');
+const {createNode, Ref, PID} = require('../lib/node');
 const expect       = require('chai').expect;
 const Immutable    = require('immutable');
 
@@ -27,7 +27,7 @@ describe('createNode', function() {
 function describeOTPNode() {
     let node                = null;
     let proc                = null;
-    let {OTPNode, Ref, PID} = createNode(null);
+    let {OTPNode}           = createNode(null);
 
     beforeEach(function() {
         node = new OTPNode();
@@ -39,7 +39,7 @@ function describeOTPNode() {
         expect(ref).to.be.an.instanceof(Ref);
     });
 
-    it('can spawn messages boxes', function() {
+    it('can spawn message boxes', function() {
         proc = node.spawn(() => ({}));
         expect(proc).to.be.an.instanceof(PID);
     });

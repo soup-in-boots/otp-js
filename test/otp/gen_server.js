@@ -7,16 +7,15 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-const {createNode} = require('../lib/node');
-const getGenServer = require('../lib/otp/gen_server');
+const {createNode, Ref, PID} = require('../../lib/node');
+const gen_server   = require('../../lib/otp/gen_server');
 
 const log = debug('open-telecom:test:otp:gen_server');
 
 describe('gen_server', function() {
-    const {OTPNode, Ref, PID} = createNode(null);
+    const {OTPNode} = createNode(null);
 
     let node       = null;
-    let gen_server = null;
     let ctx        = null;
     let pid        = null;
 
@@ -48,8 +47,7 @@ describe('gen_server', function() {
 
     beforeEach(function() {
         node       = new OTPNode();
-        gen_server = getGenServer(node);
-        ctx        = node.makeContext();
+        ctx        = node.make_context();
     })
 
     it('starts a process', async function() {

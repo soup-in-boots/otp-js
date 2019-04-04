@@ -1,4 +1,4 @@
-const {Context, PID}    = require('../lib/context.js');
+const {Context}         = require('../lib/context.js');
 const chai              = require('chai');
 const chaiAsPromised    = require('chai-as-promised');
 
