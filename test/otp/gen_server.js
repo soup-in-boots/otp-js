@@ -43,7 +43,30 @@ describe('gen_server', function() {
         }
     }
 
-    const callbacks = {init, handleCall};
+    function handleCast(ctx, command, state) {
+        const ok = true;
+
+        switch (command.msg) {
+            case 'set':
+                return {ok, state: command.value};
+            default:
+                return {ok, state};
+        }
+    }
+
+    function handleInfo(ctx, command, state) {
+        const ok = true;
+
+        switch (command.msg) {
+            case 'set':
+                return {ok, state: command.value};
+            default:
+                return {ok, state};
+        }
+    }
+
+
+    const callbacks = {init, handleCall, handleCast, handleInfo};
 
     beforeEach(function() {
         node       = new OTPNode();
@@ -73,5 +96,28 @@ describe('gen_server', function() {
         expect(resultA).to.be.true;
         expect(resultB).to.equal(value);
     });
+
+    it('can receive casts', async function() {
+        expect(gen_server.cast).to.be.a.function;
+
+        const {ok, pid} = await gen_server.start(ctx, callbacks);
+        const value     = Math.floor(Math.random() * Number.MAX_VALUE);
+
+        await gen_server.cast(ctx, pid, {msg: 'set', value});
+
+        const result = await gen_server.call(ctx, pid, {msg: 'get'});
+
+        expect(result).to.equal(value);
+    });
+
+    it('can receive arbitrary messages', async function() {
+        const {ok, pid} = await gen_server.start(ctx, callbacks);
+        const value     = Math.floor(Math.random() * Number.MAX_VALUE);
+
+        await ctx.send(pid, {msg: 'set', value});
+
+        const result = await gen_server.call(ctx, pid, {msg: 'get'});
+        expect(result).to.equal(value);
+    })
 });
 
