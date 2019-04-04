@@ -1,5 +1,5 @@
 const debug        = require('debug');
-const {createNode, Ref, PID} = require('../lib/node');
+const {create_node, Ref, PID} = require('../lib/node');
 const expect       = require('chai').expect;
 const Immutable    = require('immutable');
 
@@ -9,13 +9,13 @@ function wait(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-describe('createNode', function() {
+describe('create_node', function() {
     it('is a function', function() {
-        expect(createNode).to.be.a.function;
+        expect(create_node).to.be.a.function;
     });
 
     it('creates a class', function() {
-        const {OTPNode} = createNode();
+        const {OTPNode} = create_node();
         const inst      = new OTPNode();
         expect(OTPNode).to.be.a.function;
         expect(inst).to.be.an.object;
@@ -27,7 +27,7 @@ describe('createNode', function() {
 function describeOTPNode() {
     let node                = null;
     let proc                = null;
-    let {OTPNode}           = createNode(null);
+    let {OTPNode}           = create_node(null);
 
     beforeEach(function() {
         node = new OTPNode();

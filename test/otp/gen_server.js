@@ -7,13 +7,13 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-const {createNode, Ref, PID} = require('../../lib/node');
+const {create_node, Ref, PID} = require('../../lib/node');
 const gen_server   = require('../../lib/otp/gen_server');
 
 const log = debug('open-telecom:test:otp:gen_server');
 
 describe('gen_server', function() {
-    const {OTPNode} = createNode(null);
+    const {OTPNode} = create_node(null);
 
     let node       = null;
     let ctx        = null;
@@ -28,10 +28,10 @@ describe('gen_server', function() {
         return {ok, state};
     }
 
-    function handleCall(ctx, command, from, state) {
+    function handle_call(ctx, command, from, state) {
         const ok = true;
 
-        log('handleCall : command : %o', command);
+        log('handle_call : command : %o', command);
 
         switch (command.msg) {
             case 'set':
@@ -43,7 +43,7 @@ describe('gen_server', function() {
         }
     }
 
-    function handleCast(ctx, command, state) {
+    function handle_cast(ctx, command, state) {
         const ok = true;
 
         switch (command.msg) {
@@ -54,7 +54,7 @@ describe('gen_server', function() {
         }
     }
 
-    function handleInfo(ctx, command, state) {
+    function handle_info(ctx, command, state) {
         const ok = true;
 
         switch (command.msg) {
@@ -66,7 +66,7 @@ describe('gen_server', function() {
     }
 
 
-    const callbacks = {init, handleCall, handleCast, handleInfo};
+    const callbacks = {init, handle_call, handle_cast, handle_info};
 
     beforeEach(function() {
         node       = new OTPNode();

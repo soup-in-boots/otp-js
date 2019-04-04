@@ -7,13 +7,13 @@ chai.use(chaiAsPromised);
 
 const expect = chai.expect;
 
-const {createNode, Ref, PID} = require('../../lib/node');
+const {create_node, Ref, PID} = require('../../lib/node');
 const proc_lib     = require('../../lib/otp/proc_lib');
 
 const log = debug('open-telecom:test:otp:proc_lib');
 
 describe('proc_lib', function() {
-    const {OTPNode} = createNode(null);
+    const {OTPNode} = create_node(null);
 
     let node                  = null;
     let ctx                   = null;
