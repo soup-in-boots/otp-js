@@ -3,7 +3,7 @@ const {create_node} = require('../lib/node');
 const number_server = require('./number_server');
 const gen_server    = require('../lib/otp/gen_server');
 
-const {OTPNode} = create_node(null);
+const {OTPNode} = create_node();
 
 const node = new OTPNode();
 

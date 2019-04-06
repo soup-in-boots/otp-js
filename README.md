@@ -12,7 +12,7 @@ For example, this script would print the string "Hello world"
 
 ```javascript
 const {create_node} = require('open-telecom');
-const {OTPNode} = create_node(null);
+const {OTPNode} = create_node();
 const node = new OTPNode();
 
 const pid = node.spawn(async (ctx) => {
