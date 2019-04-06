@@ -76,6 +76,56 @@ function describeOTPNode() {
         proc = PID.of(1, 0);
 
         expect(node.deliver({to: proc, msg: 1})).to.not.throw;
-    })
+    });
+
+    it('can register contexts under names', async function() {
+        expect(node.register).to.be.a('function');
+        const ctx = await node.make_context();
+        expect(node.register(ctx, 'test')).to.not.throw;
+    });
+
+    it('can look up processes by their names', async function() {
+        expect(node.whereis).to.be.a('function');
+
+        const proc    = node.spawn(async (ctx) => {
+            ctx.register('test');
+            await ctx.receive();
+        });
+        const whereis = await node.whereis('test');
+
+        expect(Immutable.is(whereis, proc)).to.be.true;
+        expect(node.whereis('test_b')).to.be.undefined;
+    });
+
+    it('only allows one process to register a name', async function() {
+        const result = await new Promise(async (resolve, reject) => {
+            const procA = node.spawn(async (ctx) => {
+                ctx.register('test');
+                await ctx.receive();
+            });
+
+            const procB = node.spawn(async (ctx) => {
+                resolve(ctx.register('test'));
+            });
+        });
+
+        expect(result).to.be.false;
+    });
+
+    it('unregisters contexts when they die', async function() {
+        const proc = node.spawn(async (ctx) => {
+            ctx.register('test');
+            await ctx.receive();
+        });
+
+        await wait(10);
+
+        expect(node.registered.has('test')).to.be.true;
+        node.send(proc, 'stop');
+
+        await wait(10);
+
+        expect(node.registered.has('test')).to.be.false;
+    });
 }
 
