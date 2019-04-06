@@ -24,13 +24,19 @@ describe('create_node', function() {
     describe('OTPNode', describeOTPNode);
 })
 
+const mock_adapter = {
+    deliver(message) {
+        return true;
+    }
+};
+
 function describeOTPNode() {
     let node                = null;
     let proc                = null;
     let {OTPNode}           = create_node();
 
     beforeEach(function() {
-        node = new OTPNode();
+        node = new OTPNode(mock_adapter);
     });
 
     it('can create refs', function() {
@@ -49,16 +55,30 @@ function describeOTPNode() {
         expect(proc).to.be.an.instanceof(PID);
     });
 
-    it('can deliver messages', function(done) {
-        proc = node.spawn(async (mb) => {
-            log('spawned : %o', mb);
-            const message = await mb.receive();
-            expect(message).to.equal(1);
-            log('spawned : received : %o', message);
-            done();
+    describe('deliver', function() {
+        it('can deliver local messages', function(done) {
+            proc = node.spawn(async (mb) => {
+                log('spawned : %o', mb);
+                const message = await mb.receive();
+                expect(message).to.equal(1);
+                log('spawned : received : %o', message);
+                done();
+            });
+            expect(node.deliver).to.be.a('function');
+            expect(node.deliver({to: proc, msg: 1})).to.not.throw;
         });
-        expect(node.deliver).to.be.a('function');
-        expect(node.deliver({to: proc, msg: 1})).to.not.throw;
+
+        it('accepts remote pids', async function() {
+            proc = PID.of(1, 0);
+
+            expect(node.deliver({to: proc, msg: 1})).to.not.throw;
+        });
+
+        it('tries to route remote messages', function() {
+            proc = PID.of(1, 0);
+            expect(node.deliver({to: proc, msg: 'test'}, true)).to.not.throw;
+            expect(node.deliver({to: proc, msg: 'test'}, false)).to.not.throw;
+        });
     });
 
     it('fails silently when a message is undeliverable', async function() {
@@ -69,12 +89,6 @@ function describeOTPNode() {
         await wait(100);
 
         expect(node.deliver).to.be.a('function');
-        expect(node.deliver({to: proc, msg: 1})).to.not.throw;
-    });
-
-    it('accepts remote pids', async function() {
-        proc = PID.of(1, 0);
-
         expect(node.deliver({to: proc, msg: 1})).to.not.throw;
     });
 
@@ -91,9 +105,10 @@ function describeOTPNode() {
             ctx.register('test');
             await ctx.receive();
         });
-        const whereis = await node.whereis('test');
+        const ctx     = node.make_context();
 
-        expect(Immutable.is(whereis, proc)).to.be.true;
+        expect(Immutable.is(await node.whereis('test'), proc)).to.be.true;
+        expect(Immutable.is(await ctx.whereis('test'), proc)).to.be.true;
         expect(node.whereis('test_b')).to.be.undefined;
     });
 
@@ -110,6 +125,21 @@ function describeOTPNode() {
         });
 
         expect(result).to.be.false;
+    });
+
+    it('can route messages to a name', async function() {
+        const message = Math.floor(Math.random() * Number.MAX_VALUE);
+        const result  = await new Promise(async (resolve, reject) => {
+            const pid = node.spawn(async ctx => {
+                ctx.register('test');
+                const result = await ctx.receive();
+                resolve(result);
+            });
+
+            expect(node.send('test', message)).to.not.throw;
+        });
+
+        expect(result).to.equal(message);
     });
 
     it('unregisters contexts when they die', async function() {

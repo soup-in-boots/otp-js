@@ -36,6 +36,10 @@ function describeFeatures() {
         expect(ctx.deliver(1)).to.not.throw;
     });
 
+    it('can create refs', function() {
+        expect(ctx.ref).to.be.a('function');
+    })
+
     it('can receive messages', async function() {
         expect(ctx.receive).to.be.a('function');
 
@@ -63,5 +67,13 @@ function describeFeatures() {
 
     it('has a send function', function() {
         expect(ctx.send).to.be.a('function');
+    });
+
+    it('can register itself', function() {
+        expect(ctx.register).to.be.a('function');
+    });
+
+    it('can lookup processes by their name', function() {
+        expect(ctx.whereis).to.be.a('function');
     });
 }

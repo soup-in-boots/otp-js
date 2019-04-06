@@ -45,14 +45,11 @@ function create_emitter() {
 }
 
 describe('cluster_adapter', function() {
-    const to      = PID.of(0, 0);
-    const payload = Math.floor(Math.random() * Number.MAX_VALUE);
-    const message = {to, payload};
-
     const emitter         = create_emitter();
     const cluster_adapter = create_adapter(emitter);
     const {OTPNode}       = create_node(cluster_adapter);
     let node              = null;
+    let proc              = null;
 
     beforeEach(() => {
         node = new OTPNode('test');
@@ -73,9 +70,15 @@ describe('cluster_adapter', function() {
 
     it('delivers messages', () => {
         expect(cluster_adapter.deliver).to.be.a('function');
+        log('delivers messages : node : %o', node);
         return new Promise((resolve, reject) => {
             emitter.once('deliver', resolve);
+
+            const to      = node.spawn(cluster_adapter.system_process);
+            const payload = {value: Math.floor(Math.random() * Number.MAX_VALUE), self: to};
+            const message = {to, payload};
+
             expect(cluster_adapter.deliver(message)).to.not.throw;
-        })
+        });
     });
 });
