@@ -1,4 +1,6 @@
 # OTPJS
+[![Build Status](https://travis-ci.com/fauxsoup/otp-js.svg?branch=master)](https://travis-ci.com/fauxsoup/otp-js)
+
 This project makes heavy use of ES6 features and as such requires NodeJS v10
 
 This is an endeavor to replicate the Open Telecom Platform in NodeJS. You should
