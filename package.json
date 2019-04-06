@@ -11,15 +11,15 @@
     "test": "nyc mocha --recursive"
   },
   "nyc": {
-      "include": [
-          "lib/**/*.js",
-          "test/**/*.js"
-      ]
+    "include": [
+      "lib/**/*.js",
+      "test/**/*.js"
+    ]
   },
   "author": "Zachary Hueras",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.5.0",
+    "chai": "^4.2.0",
     "docdash": "^0.4.0",
     "jsdoc": "^3.4.0"
   },
@@ -29,7 +29,9 @@
     "debug": "^4.1.1",
     "ejson": "^2.1.2",
     "immutable": "^4.0.0-rc.12",
+    "mocha": "^6.0.2",
     "nyc": "^13.3.0",
+    "object-hash": "^1.3.1",
     "shortid": "^2.2.14",
     "supports-color": "^6.1.0"
   }
