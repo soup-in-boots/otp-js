@@ -11,14 +11,14 @@ function wait(ms) {
 
 describe('create_node', function() {
     it('is a function', function() {
-        expect(create_node).to.be.a.function;
+        expect(create_node).to.be.a('function');
     });
 
     it('creates a class', function() {
         const {OTPNode} = create_node();
         const inst      = new OTPNode();
-        expect(OTPNode).to.be.a.function;
-        expect(inst).to.be.an.object;
+        expect(OTPNode).to.be.a('function');
+        expect(inst).to.be.an('object');
     });
 
     describe('OTPNode', describeOTPNode);
@@ -27,15 +27,15 @@ describe('create_node', function() {
 function describeOTPNode() {
     let node                = null;
     let proc                = null;
-    let {OTPNode}           = create_node(null);
+    let {OTPNode}           = create_node();
 
     beforeEach(function() {
         node = new OTPNode();
     });
 
     it('can create refs', function() {
-        expect(node.ref).to.be.a.function;
-        expect(node.make_ref).to.be.a.function;
+        expect(node.ref).to.be.a('function');
+        expect(node.make_ref).to.be.a('function');
 
         const refA = node.ref();
         expect(refA).to.be.an.instanceof(Ref);
@@ -57,7 +57,7 @@ function describeOTPNode() {
             log('spawned : received : %o', message);
             done();
         });
-        expect(node.deliver).to.be.a.function;
+        expect(node.deliver).to.be.a('function');
         expect(node.deliver({to: proc, msg: 1})).to.not.throw;
     });
 
@@ -68,7 +68,7 @@ function describeOTPNode() {
 
         await wait(100);
 
-        expect(node.deliver).to.be.a.function;
+        expect(node.deliver).to.be.a('function');
         expect(node.deliver({to: proc, msg: 1})).to.not.throw;
     });
 

@@ -8,7 +8,7 @@ chai.use(chaiAsPromised);
 const expect = chai.expect;
 
 const {create_node, Ref, PID} = require('../../lib/node');
-const gen_server              = require('../../lib/otp/server');
+const gen_server              = require('../../lib/otp/gen_server');
 
 function init(ctx) {
     const ok    = true;
@@ -62,7 +62,7 @@ const callbacks = {
 describe('gen_server', describe_gen_server);
 
 function describe_gen_server() {
-    const {OTPNode} = create_node(null);
+    const {OTPNode} = create_node();
 
     let node = null;
     let ctx  = null;
@@ -74,7 +74,7 @@ function describe_gen_server() {
     });
 
     it('starts a process', async function() {
-        expect(gen_server.start).to.be.a.function;
+        expect(gen_server.start).to.be.a('function');
 
         const {ok, pid} = await gen_server.start(ctx, callbacks);
         expect(ok).to.be.true;
@@ -83,7 +83,7 @@ function describe_gen_server() {
 
     it(
         'can be called', async function() {
-            expect(gen_server.call).to.be.a.function;
+            expect(gen_server.call).to.be.a('function');
 
             const {ok, pid} = await gen_server.start(ctx, callbacks);
             const value     = Math.floor(Math.random() * Number.MAX_VALUE);
@@ -99,7 +99,7 @@ function describe_gen_server() {
         });
 
     it('can receive casts', async function() {
-        expect(gen_server.cast).to.be.a.function;
+        expect(gen_server.cast).to.be.a('function');
 
         const {ok, pid} = await gen_server.start(ctx, callbacks);
         const value     = Math.floor(Math.random() * Number.MAX_VALUE);

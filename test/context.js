@@ -27,17 +27,17 @@ function describeFeatures() {
     });
 
     it('knows its own pid', function() {
-        expect(ctx.self).to.be.a.function;
+        expect(ctx.self).to.be.a('function');
         expect(ctx.self()).to.deep.equal(pid);
     });
 
     it('can be delivered messages', function() {
-        expect(ctx.deliver).to.be.a.function;
+        expect(ctx.deliver).to.be.a('function');
         expect(ctx.deliver(1)).to.not.throw;
     });
 
     it('can receive messages', async function() {
-        expect(ctx.receive).to.be.a.function;
+        expect(ctx.receive).to.be.a('function');
 
         ctx.deliver(1);
         const received = await ctx.receive();
@@ -50,18 +50,18 @@ function describeFeatures() {
     });
 
     it('can wait indefinitely', async function() {
-        expect(ctx.receive(() => true, false)).to.eventually.be.resolved;
+        expect(ctx.receive(() => true, false)).to.be.fulfilled;
         await wait(1000);
         ctx.deliver(1);
     });
 
     it('waits indefinitely by default', async function() {
-        expect(ctx.receive(() => true)).to.eventually.be.resolved;
+        expect(ctx.receive(() => true)).to.be.fulfilled;
         await wait(1000);
         ctx.deliver(1);
     });
 
     it('has a send function', function() {
-        expect(ctx.send).to.be.a.function;
+        expect(ctx.send).to.be.a('function');
     });
 }
