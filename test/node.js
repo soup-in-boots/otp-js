@@ -55,6 +55,15 @@ function describeOTPNode() {
         expect(proc).to.be.an.instanceof(PID);
     });
 
+    it('can look up processes', function() {
+        expect(node).to.have.a.property('process_info');
+        expect(node.process_info).to.be.a('function');
+
+        proc = node.spawn(() => ({}));
+
+        expect(node.process_info(proc)).to.be.an('object');
+    });
+
     describe('deliver', function() {
         it('can deliver local messages', function(done) {
             proc = node.spawn(async (mb) => {
