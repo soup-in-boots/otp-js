@@ -1,9 +1,5 @@
-const {create_node} = require('../lib');
 const debug         = require('debug');
-const {OTPNode}     = create_node(null);
-const node         = new OTPNode();
-
-const gen_server = require('../lib/otp/gen_server');
+const gen_server    = require('../lib/otp/gen_server');
 
 const log = debug('open-telecom:example:number-server')
 
