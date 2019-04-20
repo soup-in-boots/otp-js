@@ -39,7 +39,7 @@ describe('cluster_adapter', function() {
     it('registers nodes', async () => {
         let registration = null;
         expect(cluster_adapter.register_node).to.be.a('function');
-        expect(registration = await cluster_adapter.register_node()).to.be.a('number');
+        expect(cluster_adapter.register_node()).to.eventually.be.a('number');
     });
 
     it('delivers messages', () => {
@@ -50,16 +50,16 @@ describe('cluster_adapter', function() {
 
             expect(function() {
                 const to      = node_a.spawn(cluster_adapter.system_process);
-                const payload = {
+                const payload = cluster_adapter.externalize(node_a, {
                     description: {
                         value: {type: 'integer'},
                         self: {type: 'pid'},
                     },
                     value: Math.floor(Math.random() * Number.MAX_VALUE),
                     self: to,
-                };
+                });
                 const message = {to, payload};
-                cluster_adapter.deliver(message)
+                cluster_adapter.deliver(message, true)
             }).to.not.throw();
         });
     });

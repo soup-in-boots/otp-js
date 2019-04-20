@@ -1,5 +1,6 @@
 const {EventEmitter} = require('events');
 const debug          = require('debug');
+const serialize      = require('../../lib/serialize');
 
 const log = debug('open-telecom:test:adapters:util');
 
@@ -10,6 +11,7 @@ function outbound_message_handler() {
         let result = null;
         let error  = null;
 
+        msg = serialize.parse(msg);
         log('outbound_message : %O', msg);
 
         switch (msg.cmd) {
@@ -34,8 +36,8 @@ function outbound_message_handler() {
 
 function create_mock_slave_emitter(message_handler = outbound_message_handler()) {
     const emitter = new EventEmitter();
-    emitter.send = (message) => emitter.emit('outbound_message', message);
 
+    emitter.send = (message) => emitter.emit('outbound_message', message);
     emitter.on('outbound_message', (...args) => message_handler(emitter, ...args));
 
     return emitter;
@@ -47,7 +49,9 @@ function create_mock_master_emitter(mock_worker) {
     emitter.workers     = [];
     emitter.setupMaster = function() {};
     emitter.fork        = function() {
-        emitter.workers.push(mock_worker(emitter.workers.length));
+        const worker = mock_worker(emitter.workers.length);
+        emitter.workers.push(worker);
+        return worker;
     };
 
     return emitter;
