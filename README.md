@@ -1,3 +1,5 @@
+This project has migrated! Check out [the new repository](https://github.com/otp-js/otp-js)
+
 # OTPJS
 [![Build Status](https://travis-ci.com/fauxsoup/otp-js.svg?branch=master)](https://travis-ci.com/fauxsoup/otp-js)
 [![Coverage Status](https://coveralls.io/repos/github/fauxsoup/otp-js/badge.svg?branch=master)](https://coveralls.io/github/fauxsoup/otp-js?branch=master)
